@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamp.cau.mapper.UserMapper">
+    <!-- User 테이블 가져오기 -->
+    <select id="getUserList" resultType="com.teamp.cau.vo.UserVo">
+        SELECT *
+        FROM USER_INFO
+    </select>
+
+    <!-- 회원가입 -->
+    <insert id="insertUser">
+        INSERT INTO USER_INFO
+            (USER_ID, PSWD, KORN_FLNM, USER_BRDT, EML_ADDR, TELNO )
+        VALUES
+            (#{USER_ID}, #{PSWD}, #{KORN_FLNM}, #{USER_BRDT}, #{EML_ADDR}, #{TELNO})
+    </insert>
+
+    <!-- 회원 정보 가져오기 -->
+    <select id="getUserById" resultType="com.teamp.cau.vo.UserVo">
+        SELECT *
+        FROM USER_INFO
+        WHERE USER_ID = #{USER_ID}
+    </select>
+
+    <select id="getUserByNo" resultType="com.teamp.cau.vo.UserVo">
+        SELECT *
+        FROM USER_INFO
+        WHERE USER_NO = #{USER_NO}
+    </select>
+
+    <!-- 비밀번호 수정 -->
+    <update id="updateUser">
+        UPDATE USER_INFO
+        SET PSWD = #{PSWD}
+        WHERE USER_NO = #{USER_NO}
+    </update>
+
+    <!-- 탈퇴 -->
+    <delete id="deleteUser">
+        DELETE
+        FROM USER_INFO
+        WHERE USER_NO = #{USER_NO}
+    </delete>
+    
+    <!-- 아이디찾기 -->
+    <select id="findIdByNameAndTel" parameterType="map" resultType="com.teamp.cau.vo.UserVo">
+    SELECT USER_ID FROM USER_INFO WHERE KORN_FLNM = #{KORN_FLNM} AND TELNO = #{TELNO}
+</select>
+
+<!-- 비번찾기 -->
+<select id="findPassword" parameterType="map" resultType="com.teamp.cau.vo.UserVo">
+    SELECT PSWD FROM USER_INFO WHERE USER_ID = #{USER_ID} AND KORN_FLNM = #{KORN_FLNM} AND TELNO = #{TELNO} 
+</select>
+
+<!-- 비밀번호초기화 및 입력 -->
+<update id="updatePassword" parameterType="map">
+    UPDATE USER_INFO SET PSWD = #{PSWD} WHERE TELNO = #{TELNO}
+</update>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamp.cau.dao.AssessmentDAO">
+
+<select id="aplyList" parameterType="com.teamp.cau.dto.StudentDTO" resultType="com.teamp.cau.dto.StudentDTO">
+
+		  SELECT *
+  		  FROM APPL_INFO
+  		  WHERE KORN_FLNM LIKE CONCAT('%', #{KORN_FLNM}, '%') AND RECRT_SCHDL_CD='1' AND payment='1'
+</select>
+	
+<update id="updateAssessment">
+	
+		UPDATE APPL_INFO SET
+		passed = #{passed}
+		WHERE appl_NO = #{appl_NO}
+</update>
+	
+<select id="selectPdf" resultType="java.util.Map">
+    SELECT pdf FROM APPL_INFO WHERE appl_NO = #{appl_No}
+    </select>
+
+
+
+
+</mapper>
+

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamp.cau.dao.AdmissionDAO">
+
+    <insert id="stud_info" parameterType="com.teamp.cau.dto.Stud_infoDTO">
+        INSERT INTO APPL_INFO (KORN_FLNM,USER_BRDT,GENDER_CD,AGE,EML_ADDR,telno,REL_TELNO,REL_CD,ZIP,ADDR,DADDR,RECRT_SCHDL_CD,CRCLM_CD,korean,math,english,avg,pdf,PHOTO_FILE,SBMSN_DT,grade,RECRT_YEAR)
+        VALUES (#{korn_flnm},#{user_brdt},#{gender_cd},#{age},#{eml_addr},#{telno},#{rel_telno},#{rel_cd},#{zip},#{addr},#{daddr},#{RECRT_SCHDL_CD},#{CRCLM_CD},#{korean},#{math},#{english},#{avg},#{pdf},#{images},now(),#{grade},#{nowYear})
+    </insert>
+
+    <insert id="test" parameterType="String">
+        INSERT INTO test (image) values (#{imges})
+    </insert>
+
+    <select id="testList" resultType="com.teamp.cau.dto.Stud_infoDTO">
+        select image as eml_addr from test
+    </select>
+    <select id="passcheck" resultType="String">
+    SELECT passed from APPL_INFO WHERE KORN_FLNM = #{passName} and USER_BRDT = #{passBrd};
+    </select>
+    
+</mapper>

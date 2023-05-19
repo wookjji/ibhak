@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamp.cau.dao.OccasionalDAO">
+
+	<select id="occList" parameterType="com.teamp.cau.dto.StudentDTO" resultType="com.teamp.cau.dto.StudentDTO">
+
+		  SELECT *
+  		  FROM APPL_INFO
+  		  WHERE KORN_FLNM LIKE CONCAT('%', #{KORN_FLNM}, '%') AND RECRT_SCHDL_CD='2' AND payment='1'
+	   
+
+	</select>
+	
+	<update id="updateOccasional">	
+	
+		UPDATE APPL_INFO SET
+		passed = #{passed}
+		WHERE appl_NO = #{appl_NO}
+		
+</update>
+
+
+
+
+
+</mapper>
+

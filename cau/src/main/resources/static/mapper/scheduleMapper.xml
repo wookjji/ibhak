@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamp.cau.dao.ScheduleDAO">
+	
+	<select id="tableList" resultType="HashMap">
+		SELECT RECRT_YEAR, SCHDL_NAME, SCHDL_START, SCHDL_END_DT, RECRT_SCHDL_CD
+		FROM RECRT_SCHDL
+		ORDER BY RECRT_YEAR DESC
+	</select>
+	<select id="scheduleCheck" resultType="HashMap" parameterType="com.teamp.cau.dto.ScheduleDTO">
+	<if test="RECRT_YEAR != 'all'">
+		SELECT RECRT_YEAR, SCHDL_NAME, SCHDL_START, SCHDL_END_DT, RECRT_SCHDL_CD
+		FROM RECRT_SCHDL
+		WHERE RECRT_YEAR = #{RECRT_YEAR }
+	</if>	
+	<if test="RECRT_YEAR == 'all'">
+		SELECT RECRT_YEAR, SCHDL_NAME, SCHDL_START, SCHDL_END_DT, RECRT_SCHDL_CD
+		FROM RECRT_SCHDL
+		ORDER BY RECRT_YEAR DESC
+	</if>
+	</select>
+	
+	<update id="save" parameterType="com.teamp.cau.dto.ScheduleDTO">
+		UPDATE RECRT_SCHDL
+		SET SCHDL_START = #{SCHDL_START }, SCHDL_END_DT = #{SCHDL_END_DT }
+		WHERE RECRT_YEAR = #{RECRT_YEAR } AND RECRT_SCHDL_CD = #{RECRT_SCHDL_CD }
+	</update>
+	
+<!-- 	결제 매퍼 -->
+	
+	<select id="paymentList" parameterType="com.teamp.cau.dto.StudentDTO" resultType="com.teamp.cau.dto.StudentDTO">
+    SELECT *        
+    FROM APPL_INFO
+    WHERE KORN_FLNM = #{param1} AND USER_BRDT = #{param2}
+   </select>
+
+	<update id="updatePayment">
+		UPDATE APPL_INFO 
+		SET payment = 1 
+		WHERE KORN_FLNM=#{param1} AND USER_BRDT=#{param2} AND payment=0
+		
+	</update>
+	
+	<update id="updatePayments">
+		UPDATE APPL_INFO 
+		SET payment = 0 
+		WHERE KORN_FLNM=#{param1} AND USER_BRDT=#{param2} AND payment=1
+		
+	</update>
+	
+	<select id="result" resultType="int" parameterType="com.teamp.cau.dto.ScheduleDTO">
+		SELECT COUNT(*)
+		FROM RECRT_SCHDL
+		WHERE RECRT_YEAR = #{RECRT_YEAR } AND RECRT_SCHDL_CD = #{RECRT_SCHDL_CD }
+	</select>
+	
+	<insert id="addSch" parameterType="com.teamp.cau.dto.ScheduleDTO">
+		INSERT INTO RECRT_SCHDL (RECRT_YEAR, RECRT_SCHDL_CD, SCHDL_NAME, SCHDL_START, SCHDL_END_DT)
+		VALUE (#{RECRT_YEAR }, #{RECRT_SCHDL_CD }, #{SCHDL_NAME }, #{SCHDL_START },#{SCHDL_END_DT })
+	</insert>
+	
+	
+</mapper>

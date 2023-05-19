@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="USER_INFO">
+    
+    <!-- 교수아이디 넘기기 -->
+    <insert id="instr_user">
+       insert into USER_INFO(INSTR_NO, TELNO, EML_ADDR, USER_BRDT, KORN_FLNM, USER_ID, PSWD, ROLE_CODE )
+       values (#{pr_no}, #{pr_telno}, #{pr_email}, #{pr_birth}, #{pr_name}, #{pr_id},#{pr_pw}, "PROFESSOR");
+    </insert>
+    
+   
+    <!-- 개인정보 수정 부분 -->
+<update id="modifypr" parameterType="com.teamp.cau.dto.professorDTO">
+   UPDATE INSTR_INFO 
+   SET KORN_FLNM = #{KORN_FLNM},TELNO = #{TELNO} ,EML_ADDR= #{EML_ADDR},TELNO= #{TELNO},
+   ADDR= #{ADDR},ENG_FLNM=#{ENG_FLNM}, DADDR= #{DADDR},USER_BRDT= #{USER_BRDT},GENDER= #{GENDER},PHOTO_FILE = #{PHOTO_FILE}
+   WHERE INSTR_NO=#{INSTR_NO}
+</update>
+    
+    <!-- 교수정보 불러오기 -->
+    <select id="selfload" parameterType="com.teamp.cau.dto.professorDTO" resultType="com.teamp.cau.dto.professorDTO">
+       select * , PHOTO_FILE as pa
+       from INSTR_INFO
+       where INSTR_NO=#{INSTR_NO};
+    </select>
+    
+    <!-- 개인정보 이름값에서 stud_NO 불러오는부분 -->
+   <select id="studno" resultType="com.teamp.cau.dto.professorDTO">
+      SELECT INSTR_NO
+      FROM USER_INFO
+      WHERE USER_NO=#{USER_NO};
+   </select>
+        
+    </mapper>

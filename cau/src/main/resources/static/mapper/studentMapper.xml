@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamp.cau.dao.StudentDAO">
+	
+	<select id="studentList" parameterType="com.teamp.cau.dto.PassDTO" resultType="com.teamp.cau.dto.PassDTO">
+	
+		SELECT *
+	    FROM STUD_INFO
+		WHERE KORN_FLNM LIKE CONCAT('%', #{KORN_FLNM}, '%')
+	
+	</select>
+	
+
+</mapper>
+

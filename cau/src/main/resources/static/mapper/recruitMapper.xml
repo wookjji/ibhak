@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamp.cau.dao.RecruitDAO">
+	<select id="year" resultType="HashMap">
+		SELECT RECRT_YEAR
+		FROM RECRT_SCHDL
+		GROUP BY RECRT_YEAR 
+		ORDER BY RECRT_YEAR DESC
+	</select>
+	<select id="depart" resultType="com.teamp.cau.dto.RecruitDTO">
+		SELECT DEPARTMENT
+		FROM CRCLM_INFO
+		GROUP BY DEPARTMENT
+	</select>
+	<select id="check" resultType="HashMap" parameterType="com.teamp.cau.dto.RecruitDTO">
+		<if test="DEPARTMENT == 'all'">
+			SELECT c.RECRT_YEAR, c.RECRT_SCHDL_CD, DEPARTMENT, APPL_NUM, SCHDL_NAME,c.CRCLM_CD,(SELECT COUNT(*) FROM APPL_INFO ap WHERE CRCLM_CD = c.CRCLM_CD AND ap.RECRT_YEAR = #{RECRT_YEAR } AND ap.RECRT_SCHDL_CD = #{RECRT_SCHDL_CD }) AS APPL_COUNT,
+			(SELECT COUNT(*) FROM STUD_INFO st JOIN APPL_INFO ap ON ap.appl_NO = st.appl_NO WHERE st.CRCLM_CD = c.CRCLM_CD AND ap.RECRT_YEAR = #{RECRT_YEAR } AND st.RECRT_SCHDL_CD = #{RECRT_SCHDL_CD }) AS STUD_COUNT
+			FROM CRCLM_INFO c
+			JOIN RECRT_SCHDL r ON r.RECRT_YEAR = c.RECRT_YEAR AND r.RECRT_SCHDL_CD = c.RECRT_SCHDL_CD
+			WHERE c.RECRT_YEAR = #{RECRT_YEAR } AND c.RECRT_SCHDL_CD = #{RECRT_SCHDL_CD }
+		</if>
+		<if test="DEPARTMENT != 'all'">
+			SELECT c.RECRT_YEAR, c.RECRT_SCHDL_CD, DEPARTMENT, APPL_NUM, SCHDL_NAME,c.CRCLM_CD,(SELECT COUNT(*) FROM APPL_INFO WHERE CRCLM_CD = c.CRCLM_CD AND APPL_INFO.RECRT_YEAR = #{RECRT_YEAR } AND APPL_INFO.RECRT_SCHDL_CD = #{RECRT_SCHDL_CD }) AS APPL_COUNT,
+			(SELECT COUNT(*) FROM STUD_INFO st JOIN APPL_INFO ap ON ap.appl_NO = st.appl_NO WHERE st.CRCLM_CD = c.CRCLM_CD AND ap.RECRT_YEAR = #{RECRT_YEAR } AND st.RECRT_SCHDL_CD = #{RECRT_SCHDL_CD }) AS STUD_COUNT
+			FROM CRCLM_INFO c
+			JOIN RECRT_SCHDL r ON r.RECRT_YEAR = c.RECRT_YEAR AND r.RECRT_SCHDL_CD = c.RECRT_SCHDL_CD
+			WHERE c.RECRT_YEAR = #{RECRT_YEAR } AND DEPARTMENT = #{DEPARTMENT } AND c.RECRT_SCHDL_CD = #{RECRT_SCHDL_CD }
+		</if>
+	</select>
+	<update id="saveNum" parameterType="com.teamp.cau.dto.RecruitDTO">
+			UPDATE CRCLM_INFO
+			SET APPL_NUM = #{APPL_NUM }
+			WHERE RECRT_YEAR = #{RECRT_YEAR } AND RECRT_SCHDL_CD = #{RECRT_SCHDL_CD } AND DEPARTMENT = #{DEPARTMENT }
+	</update>
+	
+	<select id="result" parameterType="com.teamp.cau.dto.RecruitDTO" resultType="int">
+			SELECT COUNT(*)
+			FROM CRCLM_INFO
+			WHERE RECRT_YEAR = #{RECRT_YEAR } AND CRCLM_CD = #{CRCLM_CD } AND RECRT_SCHDL_CD = #{RECRT_SCHDL_CD }
+	</select>
+	
+	<insert id="addRec" parameterType="com.teamp.cau.dto.RecruitDTO">
+			INSERT INTO CRCLM_INFO (RECRT_YEAR, CRCLM_CD, RECRT_SCHDL_CD, DEPARTMENT, APPL_NUM)
+			VALUE (#{RECRT_YEAR }, #{CRCLM_CD }, #{RECRT_SCHDL_CD }, #{DEPARTMENT }, #{APPL_NUM })
+	</insert>
+	
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="INSTR_INFO">
+    
+    <!-- 교수정보  가져오기 -->
+    <select id="prlist" resultType="com.teamp.cau.dto.professorDTO">
+    	select * from INSTR_INFO;
+    	
+    </select>
+    
+    <!-- 교수정보 검색 -->
+    <select id="search" parameterType="com.teamp.cau.dto.professorDTO" resultType="HashMap">
+    	SELECT INSTR_NO, CRCLM_CD, KORN_FLNM, USER_BRDT, EML_ADDR, TELNO, ADDR, DADDR, GENDER, ENDST_NO 
+    	FROM INSTR_INFO
+    		<choose>
+    			<when test="KORN_FLNM != 'all' and CRCLM_CD != 'all'">
+    				where korn_flnm like CONCAT('%',#{KORN_FLNM },'%') and crclm_cd like CONCAT('%',#{CRCLM_CD },'%');
+    			</when>
+    			<when test="KORN_FLNM != 'all' and CRCLM_CD == 'all'">
+    				where korn_flnm like CONCAT('%',#{KORN_FLNM },'%');
+    			</when>
+    			<when test="KORN_FLNM == 'all' and CRCLM_CD != 'all'">
+    			where crclm_cd like CONCAT('%',#{CRCLM_CD },'%');
+    			</when>
+    			<otherwise>
+				</otherwise>
+    		</choose>
+    </select>
+    
+    <!-- 교수정보 입력  -->
+    <insert id="prinfo_save" parameterType="HashMap" >
+    	insert into INSTR_INFO(INSTR_NO, KORN_FLNM, CRCLM_CD, USER_BRDT, EML_ADDR, TELNO)
+    	values (#{pr_no}, #{pr_name}, #{pr_dep}, #{pr_birth}, #{pr_email}, #{pr_telno});
+    </insert>
+
+
+	<!-- 권한주기 -->
+	<update id="INSTR_auth">
+		<foreach collection="list" item="qqq" separator=";">
+			update INSTR_INFO set ENDST_NO =#{qqq.ENDST_NO} where
+			INSTR_NO=#{qqq.INSTR_NO}
+		</foreach>
+		;
+	</update>
+   	
+   	
+   	<select id="getEndstNoByInstrNo" resultType="int" parameterType="int">
+		SELECT ENDST_NO
+		FROM INSTR_INFO
+		WHERE INSTR_NO = #{instrNo}
+	</select>
+   	
+    </mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="APPL_INFO">
+    
+    <!-- 지원자 정보 불러오기 -->
+   	<select id="callin" resultType="HashMap">
+   		select appl_NO, CRCLM_CD, RECRT_YEAR, KORN_FLNM, GENDER_CD, grade, interview, avg, total from APPL_INFO
+   		where RECRT_SCHDL_CD ='2' AND passed='서류합격';
+   	</select>
+
+	<!-- 평가 점수 저장  -->
+	<!-- 
+	<update id="resultScore" parameterType="list">
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+	update APPL_INFO set interview=#{item.inter_score}, total=grade+#{item.inter_score} where appl_NO = #{item.appl_no};
+		</foreach>
+	</update>
+	 -->
+	
+ 
+	
+	  <update id="resultScore">
+    <foreach collection="list" item="qqq" separator=";">
+	update APPL_INFO set interview =#{qqq.inter_score},total=grade+#{qqq.inter_score}, passed='합격' where appl_NO=#{qqq.appl_no}</foreach>
+    ;
+    </update>
+	
+	</mapper>

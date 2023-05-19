@@ -1,0 +1,78 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.10'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.teamp'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+
+// https://mvnrepository.com/artifact/org.json/json
+implementation 'org.json:json:20230227'
+	
+//Spring Boot Web:
+implementation 'org.springframework.boot:spring-boot-starter-web'
+implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+implementation 'org.springframework.boot:spring-boot-starter-web-services'
+implementation 'org.springframework.boot:spring-boot-starter-webflux'
+implementation	'javax.servlet:jstl:1.2'//jsp
+implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+//implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+
+//Spring Boot Data:
+implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0'
+implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+runtimeOnly 'org.apache.derby:derby'
+runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+//JSON:
+implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
+
+//Security:
+implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
+implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
+implementation 'com.auth0:java-jwt:3.18.2'
+implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
+//Testing:
+testImplementation('org.springframework.boot:spring-boot-starter-test') {
+exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+}
+testImplementation 'io.projectreactor:reactor-test'
+
+//Other:
+implementation 'org.springframework.boot:spring-boot-starter-groovy-templates'
+developmentOnly 'org.springframework.boot:spring-boot-devtools'
+annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+compileOnly 'org.projectlombok:lombok'
+annotationProcessor 'org.projectlombok:lombok'
+//implementation 'org.springframework.session:spring-session-jdbc'
+	
+	
+}
+
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

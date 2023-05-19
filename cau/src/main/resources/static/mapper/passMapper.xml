@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="list">
+
+
+	<select id="studentLimit" parameterType="com.teamp.cau.dto.PassDTO"	resultType="Integer">
+
+		SELECT APPL_NUM
+		FROM CRCLM_INFO
+		WHERE CRCLM_CD = #{CRCLM_CD} AND RECRT_SCHDL_CD =#{RECRT_SCHDL_CD} AND RECRT_YEAR=#{RECRT_YEAR};
+
+	</select>
+	
+	<select id="studentList" parameterType="com.teamp.cau.dto.PassDTO" resultType="com.teamp.cau.dto.PassDTO">
+		<![CDATA[
+		SELECT *
+		FROM APPL_INFO
+		WHERE PASS_INFO < 3 
+		AND CRCLM_CD = #{CRCLM_CD} AND RECRT_SCHDL_CD = #{RECRT_SCHDL_CD} AND (RECRT_SCHDL_CD <> 2 OR interview IS NOT NULL) 
+		AND passed = "합격" AND RECRT_YEAR = #{RECRT_YEAR} AND payment = "1" AND KORN_FLNM LIKE CONCAT('%', #{KORN_FLNM}, '%')
+		ORDER BY CASE WHEN RECRT_SCHDL_CD = 2 THEN total ELSE avg 	END DESC
+		]]>
+	</select>
+	<update id="Passupdate" parameterType="com.teamp.cau.dto.PassDTO">
+		UPDATE APPL_INFO
+		SET
+		PASS_INFO=#{PASS_INFO}
+		WHERE appl_NO=#{appl_NO}
+
+	</update>
+	<select id="result" resultType="int" parameterType="com.teamp.cau.dto.PassDTO">
+		SELECT
+		PASS_INFO
+		FROM APPL_INFO
+		WHERE appl_NO=#{appl_NO};
+	</select>
+	<select id="department" resultType="com.teamp.cau.dto.PassDTO">
+		SELECT DISTINCT DEPARTMENT,CRCLM_CD
+		FROM CRCLM_INFO
+	</select>
+	<select id="categoryList" resultType="com.teamp.cau.dto.PassDTO">
+		SELECT RECRT_YEAR
+		FROM RECRT_SCHDL
+		GROUP BY RECRT_YEAR
+		ORDER BY RECRT_YEAR DESC
+	</select>
+	
+	<select id="studentValue" parameterType="com.teamp.cau.dto.PassDTO" resultType="com.teamp.cau.dto.PassDTO">
+		SELECT * FROM APPL_INFO 
+		WHERE appl_NO = #{appl_NO}
+	</select>
+	
+	<insert id="studentSubmit1" parameterType="com.teamp.cau.dto.PassDTO">
+	INSERT INTO STUD_INFO (Student_ID,appl_NO,KORN_FLNM,USER_BRDT,GENDER_CD,
+    AGE,TELNO,REL_TELNO, REL_CD,  EML_ADDR,  ZIP, ADDR, DADDR,CRCLM_CD,CRCLM_CYCL,
+    PASS_INFO, category, avg, passed, department,PHOTO_FILE, RECRT_SCHDL_CD
+)
+VALUES (
+	#{Student_ID}, #{appl_NO}, #{KORN_FLNM}, #{USER_BRDT},  #{GENDER_CD},  #{AGE},  #{TELNO},  #{REL_TELNO},
+    #{REL_CD},  #{EML_ADDR},  #{ZIP},  #{ADDR},  #{DADDR},  #{CRCLM_CD},
+    #{CRCLM_CYCL},  #{PASS_INFO},  #{category},  #{avg},  #{passed},  #{department},#{PHOTO_FILE}, #{RECRT_SCHDL_CD}
+)
+	</insert> 
+	<select id="studentValue1" parameterType="com.teamp.cau.dto.PassDTO" resultType="com.teamp.cau.dto.PassDTO">
+		SELECT * FROM STUD_INFO
+		WHERE appl_NO = #{appl_NO}
+	</select>
+	<insert id="studentSubmit2" parameterType="com.teamp.cau.dto.PassDTO">
+    INSERT INTO USER_INFO (
+        USER_ID, PSWD, KORN_FLNM, USER_BRDT, EML_ADDR, TELNO, STUD_NO, ROLE_CODE
+    )
+    VALUES (
+        #{Student_ID}, #{PSWD}, #{KORN_FLNM}, #{USER_BRDT}, #{EML_ADDR}, #{TELNO}, #{STUD_NO}, "STUDENT"
+    )
+</insert>
+
+<!-- 개인정보 이름값에서 stud_NO 불러오는부분 -->
+	<select id="studno" resultType="com.teamp.cau.dto.PassDTO">
+		SELECT STUD_NO
+		FROM USER_INFO
+		WHERE USER_NO=#{USER_NO};
+	</select>
+
+<!-- 개인정보 수정 부분 -->
+<update id="updatestuinfo" parameterType="com.teamp.cau.dto.PassDTO">
+	UPDATE STUD_INFO 
+	SET KORN_FLNM = #{KORN_FLNM},TELNO = #{TELNO} ,EML_ADDR= #{EML_ADDR},REL_TELNO= #{REL_TELNO},
+	ZIP= #{ZIP},ADDR= #{ADDR},DADDR= #{DADDR},USER_BRDT= #{USER_BRDT},GENDER_CD= #{GENDER_CD},PHOTO_FILE = #{PHOTO_FILE}
+	WHERE STUD_NO=#{STUD_NO}
+</update>
+<!-- 개인정보 불러오기 -->
+	<select id="updatestuin" parameterType="com.teamp.cau.dto.PassDTO" resultType="com.teamp.cau.dto.PassDTO">
+		SELECT *, PHOTO_FILE as pa
+		FROM STUD_INFO
+		WHERE STUD_NO = #{STUD_NO}
+	</select>
+</mapper>
