@@ -3,7 +3,7 @@
 
 <mapper namespace="list">
 
-
+<!-- 지원학과 있는년도 수시정시 정원불러오기 -->
 	<select id="studentLimit" parameterType="com.teamp.cau.dto.PassDTO"	resultType="Integer">
 
 		SELECT APPL_NUM
@@ -11,7 +11,7 @@
 		WHERE CRCLM_CD = #{CRCLM_CD} AND RECRT_SCHDL_CD =#{RECRT_SCHDL_CD} AND RECRT_YEAR=#{RECRT_YEAR};
 
 	</select>
-	
+<!-- 	검색기능 -->
 	<select id="studentList" parameterType="com.teamp.cau.dto.PassDTO" resultType="com.teamp.cau.dto.PassDTO">
 		<![CDATA[
 		SELECT *
@@ -22,6 +22,7 @@
 		ORDER BY CASE WHEN RECRT_SCHDL_CD = 2 THEN total ELSE avg 	END DESC
 		]]>
 	</select>
+<!-- 	합격여부 변경기능 -->
 	<update id="Passupdate" parameterType="com.teamp.cau.dto.PassDTO">
 		UPDATE APPL_INFO
 		SET
@@ -29,23 +30,26 @@
 		WHERE appl_NO=#{appl_NO}
 
 	</update>
+	
 	<select id="result" resultType="int" parameterType="com.teamp.cau.dto.PassDTO">
 		SELECT
 		PASS_INFO
 		FROM APPL_INFO
 		WHERE appl_NO=#{appl_NO};
 	</select>
+<!-- 	학과 종류가져오기 -->
 	<select id="department" resultType="com.teamp.cau.dto.PassDTO">
 		SELECT DISTINCT DEPARTMENT,CRCLM_CD
 		FROM CRCLM_INFO
 	</select>
+<!-- 	지원년도 리스트 가져오기 -->
 	<select id="categoryList" resultType="com.teamp.cau.dto.PassDTO">
 		SELECT RECRT_YEAR
 		FROM RECRT_SCHDL
 		GROUP BY RECRT_YEAR
 		ORDER BY RECRT_YEAR DESC
 	</select>
-	
+<!-- 합격기능	-->
 	<select id="studentValue" parameterType="com.teamp.cau.dto.PassDTO" resultType="com.teamp.cau.dto.PassDTO">
 		SELECT * FROM APPL_INFO 
 		WHERE appl_NO = #{appl_NO}
@@ -62,6 +66,7 @@ VALUES (
     #{CRCLM_CYCL},  #{PASS_INFO},  #{category},  #{avg},  #{passed},  #{department},#{PHOTO_FILE}, #{RECRT_SCHDL_CD}
 )
 	</insert> 
+<!-- 합격시 아이디생성 -->
 	<select id="studentValue1" parameterType="com.teamp.cau.dto.PassDTO" resultType="com.teamp.cau.dto.PassDTO">
 		SELECT * FROM STUD_INFO
 		WHERE appl_NO = #{appl_NO}
